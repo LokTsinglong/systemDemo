@@ -1,17 +1,17 @@
-from flask import Flask,session
+from flask import Flask,session,render_template
 
-from backend.api.login import login_api
+from api.login import login_api
 
 from flask_migrate import Migrate
 
 from flask_cors import CORS
 
-app=Flask(__name__,static_folder='img')
+app=Flask(__name__)
 
 app.secret_key = 'your_secret_key'  # 必须设置密钥
 CORS(app, supports_credentials=True)    # 允许跨域请求和携带 Cookie
 
-app.register_blueprint(login_api,url_prefix='/login')  # 注册登录蓝图
+app.register_blueprint(login_api)  # 注册登录蓝图
 
 app.secret_key = 'my_secret_key_123'  # 设置 Flask 的 secret_key，用于加密 session 数据
 
@@ -27,13 +27,15 @@ class Config(object):
 
 app.config.from_object(Config)
 
-from backend.models import db
+from models import db
 db.init_app(app)
 
 migrate = Migrate(app, db)
 
+
 @app.route('/')
-def hello_world():
-    return 'Hello, World!'  
+def home():
+    return render_template('login.html')
+
 if __name__ == '__main__':
-    app.run('127.0.0.1',8000,debug=True)
+    app.run(host='127.0.0.1',port=8000,debug=True)

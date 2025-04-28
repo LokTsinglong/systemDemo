@@ -1,10 +1,10 @@
 from flask import Blueprint,request, jsonify
 from flask import session
-from backend.models import User
+from models import User
 
 login_api=Blueprint('login_api',__name__)
 
-@login_api.route('/login',methods=['POST']) 
+@login_api.route('/',methods=['POST']) 
 def login():
     data = request.get_json()
     user = User.query.filter_by(username=data['username']).first()
